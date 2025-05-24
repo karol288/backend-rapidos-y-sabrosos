@@ -1,0 +1,42 @@
+{
+  "name": "backend-rapidos-y-sabrosos",
+  "version": "1.0.0",
+  "description": "backend rapidos y sabrosos ",
+  "keywords": [
+    "curso"
+  ],
+  "homepage": "https://github.com/karol288/backend-rapidos-y-sabrosos#readme",
+  "bugs": {
+    "url": "https://github.com/karol288/backend-rapidos-y-sabrosos/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karol288/backend-rapidos-y-sabrosos.git"
+  },
+  "license": "ISC",
+  "author": "valentina solano",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js "
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.2",
+    "path": "^0.12.7",
+    "pg": "^8.16.0",
+    "sequelize": "^6.37.7",
+    "skeleton-css": "^2.0.4",
+    "zod": "^3.24.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
