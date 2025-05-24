@@ -27,7 +27,7 @@ const Usuario = sequelize.define(
     nombre_usuario: {
       type: DataTypes.STRING(100),
       allowNull: false,
-      validate: {
+      unique: {
         unique: {
           name: "uq_nombre_usuario",
           msg: "Ya existe una persona registrada con este nombre de usuario",
@@ -52,26 +52,12 @@ const Usuario = sequelize.define(
           msg: "La contraseña debe tener al menos 8 caracteres",
         },
       },
-    } /* 
-    telefono: {
-      type: DataTypes.STRING(20),
-      validate: {
-        is: {
-          args: /^[0-9()+-\s]+$/,
-          msg: "Formato de teléfono inválido",
-        },
-      },
-    }, */ /* 
-    direccion: {
-      type: DataTypes.TEXT,
-      validate: {
-        len: {
-          args: [5, 500],
-          msg: "La dirección debe tener entre 5 y 500 caracteres",
-        },
-      },
-    }, */,
-    id_roles: {
+    },
+
+
+
+    //conexiones con otras tablas 
+    id_rol: {
       type: DataTypes.INTEGER,
       allowNull: false, //por si quiero que sea null
       comment: "rol del usuario (admin, empleado)",
@@ -103,7 +89,7 @@ const Usuario = sequelize.define(
 // Métodos de instancia
 
 //verifica si la contraseña ingresada por el usuario es igual a la encriptada
-Persona.prototype.validarContrasena = function (contrasena) {
+Usuario.prototype.validarContrasena = function (contrasena) {
   return bcrypt.compareSync(contrasena, this.contrasena);
 };
 
@@ -123,7 +109,7 @@ Usuario.associate = function (models) {
   // Relación con Sector (N:1)
   Usuario.belongsTo(models.Roles, {
     foreignKey: "id_rol",
-    as: "Roles",
+    as: "rol",
     onDelete: "RESTRICT",
   });
 };

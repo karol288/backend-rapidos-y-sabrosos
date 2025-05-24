@@ -39,7 +39,7 @@ Roles.associate = function (models) {
   // Relación con Solicitud (1:N) 1:N es uno a muchos
 
   //el hasMany se usa cuando nuestra tabla va relacionada a otra tabla
-  Roles.hasMany(models.Roles, {
+  Roles.hasMany(models.Usuario, {
     foreignKey: "id_rol",
     as: "usuarios",
     onDelete: "CASCADE", //DUDA
@@ -48,4 +48,4 @@ Roles.associate = function (models) {
   // el belongsTo se usa cuando nuestra tabla tiene una llave foranea
 };
 
-export default Productos;
+export default Roles;
