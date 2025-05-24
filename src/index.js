@@ -4,6 +4,7 @@ import database from "./config/database.js";
 import { PORT } from "./config.js";
 import usuarioRoutes from "./routes/usuario.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import productoRoutes from "./routes/producto.routes.js";
 
 
 
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/usuarios", usuarioRoutes)
+app.use("/api/productos", productoRoutes)
 app.use("/api/auth", authRoutes)
 
   /* POR SI NO ENCUENTRA LA RUTA
