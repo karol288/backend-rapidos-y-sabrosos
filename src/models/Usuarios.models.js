@@ -3,9 +3,9 @@ import bcrypt from "bcryptjs";
 import sequelize from "../config/database.js";
 
 const Usuario = sequelize.define(
-  "Usuario",
+  "usuario",
   {
-    id: {
+    id_usuario: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -27,19 +27,18 @@ const Usuario = sequelize.define(
     nombre_usuario: {
       type: DataTypes.STRING(100),
       allowNull: false,
+
       unique: {
-        unique: {
-          name: "uq_nombre_usuario",
-          msg: "Ya existe una persona registrada con este nombre de usuario",
+        name: "uq_nombre_usuario",
+        msg: "Ya existe una persona registrada con este nombre de usuario",
+      },
+      validate: {
+        notEmpty: {
+          msg: "El nombre de usuario no puede estar vacio",
         },
-        validate: {
-          notEmpty: {
-            msg: "El nombre de usuario no puede estar vacio",
-          },
-          len: {
-            args: [2, 100],
-            msg: "El nombre de usuario debe tener entre 2 y 100 caracteres",
-          },
+        len: {
+          args: [2, 100],
+          msg: "El nombre de usuario debe tener entre 2 y 100 caracteres",
         },
       },
     },
@@ -54,18 +53,20 @@ const Usuario = sequelize.define(
       },
     },
 
-
-
-    //conexiones con otras tablas 
-    id_rol: {
+    //conexiones con otras tablas
+    id_roles: {
       type: DataTypes.INTEGER,
       allowNull: false, //por si quiero que sea null
+      references: {
+        model: "roles", // nombre de la tabla en la BD
+        key: "id_roles", // clave primaria de Roles
+      },
       comment: "rol del usuario (admin, empleado)",
     },
   },
   {
     tableName: "usuario",
-    timestamps: true,
+    timestamps: false,
     underscored: true, // snake_case
     hooks: {
       //cuando se guarda
@@ -89,26 +90,15 @@ const Usuario = sequelize.define(
 // Métodos de instancia
 
 //verifica si la contraseña ingresada por el usuario es igual a la encriptada
-Usuario.prototype.validarContrasena = function (contrasena) {
-  return bcrypt.compareSync(contrasena, this.contrasena);
+Usuario.prototype.validarContrasena = async function (contrasena) {
+  return bcrypt.compare(contrasena, this.contrasena);
 };
 
 // Relaciones
 Usuario.associate = function (models) {
-  // Relación con Solicitud (1:N) 1:N es uno a muchos
-
-  //el hasMany se usa cuando nuestra tabla va relacionada a otra tabla
-  /*  Persona.hasMany(models.Solicitud, {
-    foreignKey: "id_persona",
-    as: "solicitudes",
-    onDelete: "CASCADE",
-  }); */
-
-  // el belongsTo se usa cuando nuestra tabla tiene una llave foranea
-
   // Relación con Sector (N:1)
   Usuario.belongsTo(models.Roles, {
-    foreignKey: "id_rol",
+    foreignKey: "id_roles",
     as: "rol",
     onDelete: "RESTRICT",
   });

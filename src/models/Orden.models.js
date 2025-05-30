@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import sequelize from "../config/database.js";
 
 const Orden = sequelize.define(
-  "Orden",
+  "orden",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -51,7 +51,7 @@ const Orden = sequelize.define(
       allowNull: true,
       validate: {
         len: {
-          args: [2, 500],
+          args: [0, 500],
           msg: "Las observaciones no pueden tener mas de 500 caracteres ",
         },
       },
@@ -102,7 +102,7 @@ Orden.associate = function (models) {
     onDelete: "RESTRICT",
   });
 
-  Orden.belongsTo(models.Productos, {
+  Orden.belongsTo(models.Producto, {
     foreignKey: "id_producto",
     as: "producto",
     onDelete: "RESTRICT",

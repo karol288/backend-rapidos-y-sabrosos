@@ -1,4 +1,4 @@
-import pkg from "pg"; //se importa paquete pg para poder trabajar con bases de datos postgresql
+/* import pkg from "pg"; //se importa paquete pg para poder trabajar con bases de datos postgresql
 import { BD_HOST, BD_NAME, BD_PASS, BD_PORT, BD_USER } from "../config.js"; //importamos nuestros datos de la db
 
 const { Client } = pkg; //Extraemos la clase de pkg client para enviar los dtos a la bd
@@ -24,3 +24,4 @@ const db = new Client({
 
 // Exportamos la instancia del cliente para poder usarla en otras partes del proyecto
 export default db;
+ */

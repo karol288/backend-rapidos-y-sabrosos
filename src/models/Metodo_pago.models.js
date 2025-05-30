@@ -2,7 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 
 const Metodo_pago = sequelize.define(
-  "Metodo_pago",
+  "metodo_pago",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -41,11 +41,11 @@ Metodo_pago.associate = function (models) {
   //el hasMany se usa cuando nuestra tabla va relacionada a otra tabla
   Metodo_pago.hasMany(models.Orden, {
     foreignKey: "id_metodo_pago",
-    as: "Orden",
+    as: "ordenes",
     onDelete: "CASCADE", //DUDA
   });
 
   // el belongsTo se usa cuando nuestra tabla tiene una llave foranea
 };
 
-export default Productos;
+export default Metodo_pago;

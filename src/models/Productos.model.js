@@ -1,9 +1,8 @@
 import { DataTypes } from "sequelize";
-import bcrypt from "bcryptjs";
 import sequelize from "../config/database.js";
 
-const Productos = sequelize.define(
-  "Productos",
+const Producto = sequelize.define(
+  "producto",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -48,7 +47,7 @@ const Productos = sequelize.define(
           msg: "La dirección debe tener entre 5 y 500 caracteres",
         }, */
         notEmpty: {
-          msg: "La imagen del producto no puede estaar vacia",
+          msg: "La imagen del producto no puede est ar vacia",
         },
       },
     },
@@ -105,17 +104,17 @@ const Productos = sequelize.define(
 );
 
 // Relaciones
-Productos.associate = function (models) {
+Producto.associate = function (models) {
   // Relación con Solicitud (1:N) 1:N es uno a muchos
 
   //el hasMany se usa cuando nuestra tabla va relacionada a otra tabla
-  Productos.hasMany(models.Orden, {
+  Producto.hasMany(models.Orden, {
     foreignKey: "id_producto",
-    as: "Orden",
+    as: "ordenes",
     onDelete: "CASCADE", //DUDA
   });
 
   // el belongsTo se usa cuando nuestra tabla tiene una llave foranea
 };
 
-export default Productos;
+export default Producto;

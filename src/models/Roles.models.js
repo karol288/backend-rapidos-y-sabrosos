@@ -2,9 +2,9 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/database.js";
 
 const Roles = sequelize.define(
-  "Roles",
+  "roles",
   {
-    id: {
+    id_roles: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -40,7 +40,7 @@ Roles.associate = function (models) {
 
   //el hasMany se usa cuando nuestra tabla va relacionada a otra tabla
   Roles.hasMany(models.Usuario, {
-    foreignKey: "id_rol",
+    foreignKey: "id_roles",
     as: "usuarios",
     onDelete: "CASCADE", //DUDA
   });
