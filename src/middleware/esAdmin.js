@@ -4,7 +4,7 @@ export const esAdmin = (req, res, next) => {
     return res.status(403).json({
       success: false,
       message:
-        "Acceso denegado: solo administradores pueden realiar esta accion ",
+        "Acceso denegado: solo administradores pueden realizar esta accion ",
     });
   }
   next();

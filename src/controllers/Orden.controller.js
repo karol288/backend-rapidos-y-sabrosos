@@ -60,12 +60,12 @@ export const obtenerOrdenes = async (req, res) => {
         {
           model: Metodo_pago,
           as: "metodoPago",
-          attributes: ["nombre_metodo"],
+          attributes: ["nombre_metodo_pago"],
         },
         {
           model: Productos,
           as: "producto",
-          attributes: ["nombre", "precio"],
+          attributes: ["nombre_producto", "precio"],
         },
       ],
       order: [["created_at", "DESC"]],
@@ -80,7 +80,9 @@ export const obtenerOrdenes = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error al obtener las órdenes.",
+      error: error.message, // 👈 importante
     });
+
   }
 };
 
@@ -93,12 +95,12 @@ export const obtenerOrdenPorId = async (req, res) => {
         {
           model: Metodo_pago,
           as: "metodoPago",
-          attributes: ["nombre_metodo"],
+          attributes: ["nombre_metodo_pago"],
         },
         {
           model: Productos,
           as: "producto",
-          attributes: ["nombre", "precio"],
+          attributes: ["nombre_producto", "precio"],
         },
       ],
     });

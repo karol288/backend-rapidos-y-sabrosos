@@ -1,15 +1,17 @@
 import { Op } from "sequelize";
 import Usuario from "../models/Usuarios.models.js";
 import Roles from "../models/Roles.models.js";
+import bcrypt from "bcryptjs";
 
 export const getAllUsuarios = async (req, res) => {
   try {
     const usuarios = await Usuario.findAll({
       order: [["nombre_completo_usuario", "ASC"]], //los trae por el nombre de usuario
+      attributes: { exclude: ["contrasena"] }, // ✅ aquí
       include: [
         {
           model: Roles,
-          as: "Roles",
+          as: "rol",
           attributes: ["nombre_rol"], //tipo de rol
         },
       ],
@@ -24,6 +26,7 @@ export const getAllUsuarios = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error al obtener los usuarios",
+      error: error.error
     });
   }
 };
@@ -32,10 +35,11 @@ export const getUsuarioById = async (req, res) => {
   try {
     const { id } = req.params;
     const usuario = await Usuario.findByPk(id, {
+      attributes: { exclude: ["contrasena"] }, // ✅ esto sí está bien
       include: {
         model: Roles,
-        as: "Roles",
-        attribute: ["nombre_rol"],
+        as: "rol",
+        attributes: ["nombre_rol"],
       },
       attributes: { exclude: ["contrasena"] }, //con esto evitamos que me pase la contraseña cuando pida lo del id
     });
@@ -164,7 +168,7 @@ export const updateUsuario = async (req, res) => {
       nombre_completo_usuario:
         nombre_completo_usuario || usuario.nombre_completo_usuario,
       nombre_usuario: nombre_usuario || usuario.nombre_usuario,
-      contrasena: nuevaContrasena,
+
       id_roles: id_roles || usuario.id_roles,
     });
 
