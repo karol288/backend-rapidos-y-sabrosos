@@ -25,14 +25,14 @@ const Producto = sequelize.define(
     },
 
     descripcion: {
-      type: DataTypes.STRING(300),
+      type: DataTypes.STRING(800),
       allowNull: false,
       validate: {
         notEmpty: {
           msg: "La descripcion del producto no puede estar vacia ",
         },
         len: {
-          args: [2, 300],
+          args: [2, 800],
           msg: "La descripcion debe tener entre 2 y 300 caracteres",
         },
       },
@@ -106,11 +106,16 @@ const Producto = sequelize.define(
 // Relaciones
 Producto.associate = function (models) {
   // Relación con Solicitud (1:N) 1:N es uno a muchos
-
+  Producto.belongsToMany(models.Orden, {
+    through: models.OrdenProducto,
+    foreignKey: "producto_id",
+    otherKey: "orden_id",
+    as: "ordenes",
+  });
   //el hasMany se usa cuando nuestra tabla va relacionada a otra tabla
   Producto.hasMany(models.Orden, {
     foreignKey: "id_producto",
-    as: "ordenes",
+    as: "ordenesProductos",
     onDelete: "CASCADE", //DUDA
   });
 

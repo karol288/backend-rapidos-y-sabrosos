@@ -26,7 +26,7 @@ export const getAllUsuarios = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error al obtener los usuarios",
-      error: error.error
+      error: error.error,
     });
   }
 };
@@ -91,7 +91,9 @@ export const createUsuario = async (req, res) => {
     if (usuarioExistente) {
       return res.status(400).json({
         success: false,
-        message: "El nombre de usuario ya esta en uso",
+        errores: {
+          nombre_usuario: "El nombre de usuario ya esta en uso",
+        },
       });
     }
 
@@ -114,9 +116,23 @@ export const createUsuario = async (req, res) => {
     });
   } catch (error) {
     console.error("Error al crear el usuario :", error);
+
+    // Si el error es de validación de Sequelize
+    if (error.name === "SequelizeValidationError") {
+      const errores = {};
+      error.errors.forEach((err) => {
+        errores[err.path] = err.message; // path = campo, message = texto de error
+      });
+
+      return res.status(400).json({
+        success: false,
+        errores,
+      });
+    }
+
     res.status(500).json({
       success: false,
-      message: "Error al crear el usuario ",
+      message: "Error inesperado del servidor",
     });
   }
 };

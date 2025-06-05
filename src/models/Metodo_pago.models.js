@@ -41,7 +41,7 @@ Metodo_pago.associate = function (models) {
   //el hasMany se usa cuando nuestra tabla va relacionada a otra tabla
   Metodo_pago.hasMany(models.Orden, {
     foreignKey: "id_metodo_pago",
-    as: "ordenes",
+    as: "ordenesMetodoPago",
     onDelete: "CASCADE", //DUDA
   });
 

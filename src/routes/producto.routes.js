@@ -9,14 +9,21 @@ import {
   getProductoById,
   updateProducto,
 } from "../controllers/Productos.controller.js";
+import { upload } from "../middleware/upload.js";
 
 const router = express.Router();
 
-router.get("/", verificarToken, getAllProductos); //lista todos los productos
+router.get("/", getAllProductos); //lista todos los productos
 
 router.get("/:id", verificarToken, getProductoById); //tener un producto por el id
 
-router.post("/crear", verificarToken, esAdmin, createProducto); //crear un producto
+router.post(
+  "/crear",
+  verificarToken,
+  esAdmin,
+  upload.single("imagen_producto"),
+  createProducto
+); //crear un producto
 
 router.patch("/:id", verificarToken, esAdmin, updateProducto); //actualizar un producto por su id
 

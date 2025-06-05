@@ -12,7 +12,6 @@ import rolesRoutes from "./routes/roles.routes.js";
 // Importa los modelos para que se ejecuten las asociaciones
 import "./models/index.js";
 
-
 /* import sequelize from "./config/database.js"; */
 
 const app = express();
@@ -21,6 +20,7 @@ app.use(express.json());
 
 app.use("/api/usuarios", usuarioRoutes);
 app.use("/api/productos", productoRoutes);
+app.use("/uploads", express.static("uploads"));
 app.use("/api/roles", rolesRoutes);
 app.use("/api/ordenes", ordenRoutes);
 app.use("/api/metodos-pago", metodoPagoRoutes);
@@ -36,9 +36,9 @@ app.use("/api/auth", authRoutes);
     await database.authenticate();
     console.log("🟢 Conexión a la base de datos establecida correctamente.");
 
-    /*     // Puedes usar sync solo si quieres sincronizar sin migraciones
-        await database.sync({ alter: true });  // 🔁 aquí creará las tablas
-        console.log("🟢 Modelos sincronizados correctamente."); */
+    // Puedes usar sync solo si quieres sincronizar sin migraciones
+    await database.sync({ alter: true }); // 🔁 aquí creará las tablas
+    console.log("🟢 Modelos sincronizados correctamente.");
 
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);

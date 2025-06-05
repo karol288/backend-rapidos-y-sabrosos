@@ -54,16 +54,16 @@ export const createProducto = async (req, res) => {
     const {
       nombre_producto,
       descripcion,
-      imagen_producto,
       precio,
       disponibilidad,
       cantidad_disponible,
     } = req.body;
 
+    //validar campos obligatorios
+
     if (
       !nombre_producto ||
       !descripcion ||
-      !imagen_producto ||
       !precio ||
       disponibilidad === undefined ||
       cantidad_disponible === undefined
@@ -73,6 +73,19 @@ export const createProducto = async (req, res) => {
         message: "Todos los campos son obligatorios",
       });
     }
+
+    // Validar archivo subido
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "La imagen del producto es obligatoria",
+      });
+    }
+
+    // Construir URL pública de la imagen
+    const imagen_producto = `${req.protocol}://${req.get("host")}/uploads/${
+      req.file.filename
+    }`;
 
     const nuevoProducto = await Productos.create({
       nombre_producto,

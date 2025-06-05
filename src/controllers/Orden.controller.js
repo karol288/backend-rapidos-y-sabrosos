@@ -1,34 +1,34 @@
-import Orden from "../models/Orden.models.js";
-import Metodo_pago from "../models/Metodo_pago.models.js";
-import Productos from "../models/Productos.model.js";
+import models from "../models/index.js"; // O como se llame tu archivo de asociaciones
+const { Orden, Metodo_pago, Producto } = models;
 
 export const crearOrden = async (req, res) => {
+  const {
+    nombre,
+    telefono,
+    direccion,
+    observaciones,
+    comprobante,
+    id_metodo_pago,
+    productos,
+  } = req.body;
+
+  if (
+    !nombre ||
+    !telefono ||
+    !direccion ||
+    !comprobante ||
+    !id_metodo_pago ||
+    !productos ||
+    !Array.isArray(productos)
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "Datos incompletos.",
+    });
+  }
+
   try {
-    const {
-      nombre,
-      telefono,
-      direccion,
-      observaciones,
-      comprobante,
-      id_metodo_pago,
-      id_producto,
-    } = req.body;
-
-    // Validación básica
-    if (
-      !nombre ||
-      !telefono ||
-      !direccion ||
-      !comprobante ||
-      !id_metodo_pago ||
-      !id_producto
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "Todos los campos obligatorios deben estar completos.",
-      });
-    }
-
+    // 1. Crear orden
     const nuevaOrden = await Orden.create({
       nombre,
       telefono,
@@ -36,19 +36,47 @@ export const crearOrden = async (req, res) => {
       observaciones,
       comprobante,
       id_metodo_pago,
-      id_producto,
     });
 
+    // 2. Asociar productos
+    for (const item of productos) {
+      await nuevaOrden.addProducto(item.id_producto, {
+        through: { cantidad: item.cantidad },
+      });
+    }
+
+    // 3. Obtener la orden con los productos asociados (y cantidades)
+    const ordenConProductos = await Orden.findByPk(nuevaOrden.id, {
+      include: [
+        {
+          model: Metodo_pago,
+          as: "metodoPago",
+          attributes: ["nombre_metodo_pago"],
+        },
+        {
+          model: Producto,
+          as: "productos",
+          attributes: ["id", "nombre_producto", "precio"],
+          through: {
+            attributes: ["cantidad"],
+          },
+        },
+      ],
+      attributes: { exclude: ["id_producto"] }, // excluir ese campo
+    });
+
+    // 4. Responder con orden completa
     res.status(201).json({
       success: true,
       message: "Orden creada exitosamente.",
-      data: nuevaOrden,
+      data: ordenConProductos,
     });
   } catch (error) {
     console.error("Error al crear la orden:", error);
     res.status(500).json({
       success: false,
-      message: "Error interno al crear la orden.",
+      message: "Error  al crear la orden.",
+      error: error.message,
     });
   }
 };
@@ -63,8 +91,8 @@ export const obtenerOrdenes = async (req, res) => {
           attributes: ["nombre_metodo_pago"],
         },
         {
-          model: Productos,
-          as: "producto",
+          model: Producto,
+          as: "productos",
           attributes: ["nombre_producto", "precio"],
         },
       ],
@@ -80,9 +108,8 @@ export const obtenerOrdenes = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error al obtener las órdenes.",
-      error: error.message, // 👈 importante
+      error: error.message, //
     });
-
   }
 };
 
@@ -98,9 +125,12 @@ export const obtenerOrdenPorId = async (req, res) => {
           attributes: ["nombre_metodo_pago"],
         },
         {
-          model: Productos,
-          as: "producto",
-          attributes: ["nombre_producto", "precio"],
+          model: Producto,
+          as: "productos",
+          attributes: ["id", "nombre_producto", "precio"],
+          through: {
+            attributes: ["cantidad"],
+          },
         },
       ],
     });

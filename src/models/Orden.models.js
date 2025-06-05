@@ -1,5 +1,4 @@
 import { DataTypes } from "sequelize";
-import bcrypt from "bcryptjs";
 import sequelize from "../config/database.js";
 
 const Orden = sequelize.define(
@@ -76,12 +75,6 @@ const Orden = sequelize.define(
       allowNull: false, //por si quiero que sea null en este caso no
       comment: "El tipo de pago a realizar (efectivo, transferencia)",
     },
-
-    id_producto: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      comment: "Productos a comprar ",
-    },
   },
 
   {
@@ -99,13 +92,13 @@ Orden.associate = function (models) {
   Orden.belongsTo(models.Metodo_pago, {
     foreignKey: "id_metodo_pago",
     as: "metodoPago",
-    onDelete: "RESTRICT",
   });
 
-  Orden.belongsTo(models.Producto, {
-    foreignKey: "id_producto",
-    as: "producto",
-    onDelete: "RESTRICT",
+  Orden.belongsToMany(models.Producto, {
+    through: models.OrdenProducto,
+    foreignKey: "orden_id",
+    otherKey: "producto_id",
+    as: "productos",
   });
 };
 
